@@ -1,0 +1,49 @@
+:root {
+  --navy-deep: #0a0e27;
+  --navy-mid: #141b3d;
+  --indigo: #1e2a5c;
+  --indigo-light: #2d3b73;
+  --cream: #e8dcc0;
+  --cream-dim: #b8a884;
+  --gold: #c9a44c;
+  --gold-bright: #e6c860;
+  --magenta: #c0437a;
+  --magenta-glow: rgba(192, 67, 122, 0.5);
+  --cyan-skin: #8ec7c7;
+  --border: rgba(201, 164, 76, 0.25);
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  font-family:
+    'Georgia', 'Palatino', 'Times New Roman', serif;
+  color: var(--cream);
+  background: radial-gradient(
+    ellipse at center 30%,
+    var(--indigo) 0%,
+    var(--navy-mid) 45%,
+    var(--navy-deep) 100%
+  );
+}
+
+a {
+  color: var(--gold-bright);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
