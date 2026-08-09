@@ -37,7 +37,7 @@
         type="button"
         class="tile"
         class:playing={isPlaying && currentCategoryId === category.id}
-        on:click={() => playCategory(category.id)}
+        on:click={(): void => playCategory(category.id)}
       >
         <span class="tile-label">{category.label}</span>
         <span class="tile-description">{category.description}</span>
@@ -58,10 +58,16 @@
 
   <audio
     bind:this={audioEl}
-    on:playing={() => (isPlaying = true)}
-    on:pause={() => (isPlaying = false)}
-    on:ended={() => (isPlaying = false)}
-    on:error={() => {
+    on:playing={(): void => {
+      isPlaying = true;
+    }}
+    on:pause={(): void => {
+      isPlaying = false;
+    }}
+    on:ended={(): void => {
+      isPlaying = false;
+    }}
+    on:error={(): void => {
       isPlaying = false;
       errorMessage = 'Failed to play that clip.';
     }}
