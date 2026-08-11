@@ -24,20 +24,20 @@ export const AUDIO_CATEGORIES: AudioCategory[] = [
   { id: 'laughter', label: 'Laughter', description: 'Amused cackle', clipCount: 2 },
   {
     id: 'die',
-    label: 'Reversed: Farewell',
-    description: 'Backwards-played clip from a specific in-game moment',
+    label: 'Reversed: Death Cry',
+    description: 'Backwards death cry',
     clipCount: 3,
   },
   {
     id: 'hehe',
     label: 'Reversed: Cackle',
-    description: 'Backwards-played clip from a specific in-game moment',
+    description: 'Backwards cackle',
     clipCount: 6,
   },
   {
     id: 'hurt_sad',
     label: 'Reversed: Pained',
-    description: 'Backwards-played clip from a specific in-game moment',
+    description: 'Backwards pained cry',
     clipCount: 4,
   },
 ];
