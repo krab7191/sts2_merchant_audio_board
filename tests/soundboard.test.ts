@@ -6,7 +6,7 @@ function category(overrides: Partial<AudioCategory>): AudioCategory {
   return {
     id: 'test',
     label: 'Test',
-    description: 'A test category',
+    variant: 'merchant',
     clipCount: 3,
     ...overrides,
   };

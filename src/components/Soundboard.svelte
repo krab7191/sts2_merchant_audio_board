@@ -1,6 +1,9 @@
 <script lang="ts">
-  import { AUDIO_CATEGORIES } from '../data/audioManifest';
+  import { AUDIO_CATEGORIES, categoriesByVariant } from '../data/audioManifest';
   import { pickRandomClip } from '../lib/soundboard';
+
+  const merchantCategories = categoriesByVariant('merchant');
+  const fakeMerchantCategories = categoriesByVariant('fake_merchant');
 
   let audioEl: HTMLAudioElement;
   let lastPlayed: Record<string, number> = {};
@@ -91,18 +94,38 @@
     </svg>
   </div>
 
-  <div class="grid">
-    {#each AUDIO_CATEGORIES as category (category.id)}
-      <button
-        type="button"
-        class="tile"
-        class:playing={isPlaying && currentCategoryId === category.id}
-        on:click={(): void => playCategory(category.id)}
-      >
-        <span class="tile-label">{category.label}</span>
-        <span class="tile-description">{category.description}</span>
-      </button>
-    {/each}
+  <div class="grids">
+    <div class="group merchant">
+      <div class="group-header">Merchant</div>
+      <div class="group-grid">
+        {#each merchantCategories as category (category.id)}
+          <button
+            type="button"
+            class="tile"
+            class:playing={isPlaying && currentCategoryId === category.id}
+            on:click={(): void => playCategory(category.id)}
+          >
+            {category.label}
+          </button>
+        {/each}
+      </div>
+    </div>
+
+    <div class="group fake">
+      <div class="group-header">Fake Merchant</div>
+      <div class="group-grid">
+        {#each fakeMerchantCategories as category (category.id)}
+          <button
+            type="button"
+            class="tile fake"
+            class:playing={isPlaying && currentCategoryId === category.id}
+            on:click={(): void => playCategory(category.id)}
+          >
+            {category.label}
+          </button>
+        {/each}
+      </div>
+    </div>
   </div>
 
   <div class="status" aria-live="polite">
@@ -171,38 +194,90 @@
     }
   }
 
-  .grid {
+  .grids {
     flex: 1;
     min-height: 0;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .group {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  /* Flex-grow proportional to each group's row count, so a grid row ends up
+     the same height in both groups (2 rows for merchant on narrow screens,
+     1 row for fake-merchant, always) -- see the matching breakpoint below,
+     which flips merchant back to a single row and its flex-grow to match. */
+  .group.merchant {
+    flex-grow: 2;
+  }
+
+  .group.fake {
+    flex-grow: 1;
+  }
+
+  .group-header {
+    flex-shrink: 0;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0 0.2rem;
+  }
+
+  .group.merchant .group-header {
+    color: var(--gold);
+  }
+
+  .group.fake .group-header {
+    color: var(--magenta);
+  }
+
+  .group-grid {
+    flex: 1;
+    min-height: 0;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-    gap: 0.5rem;
+    gap: 0.4rem;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+
+  .group.fake .group-grid {
+    grid-template-rows: 1fr;
   }
 
   @media (min-width: 480px), (orientation: landscape) {
-    .grid {
-      grid-template-columns: repeat(4, 1fr);
-      grid-template-rows: repeat(2, 1fr);
+    .group.merchant .group-grid {
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: 1fr;
+    }
+
+    .group.merchant {
+      flex-grow: 1;
     }
   }
 
   .tile {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.15rem;
     overflow: hidden;
-    padding: 0.4rem 0.5rem;
+    padding: 0.3rem 0.4rem;
     border-radius: var(--radius-sm);
     border: 2px solid var(--border);
     background: radial-gradient(circle at 50% 30%, var(--indigo-light) 0%, var(--indigo) 60%, var(--navy-deep) 100%);
     color: var(--cream);
     font-family: inherit;
-    cursor: pointer;
+    font-size: clamp(0.68rem, 2.4vh, 0.95rem);
+    font-weight: bold;
+    letter-spacing: 0.01em;
     text-align: center;
+    cursor: pointer;
     transition:
       transform 0.15s ease,
       border-color 0.15s ease,
@@ -215,6 +290,10 @@
 
   .tile:active {
     transform: scale(0.96);
+  }
+
+  .tile.fake {
+    color: var(--gold-bright);
   }
 
   .tile.playing {
@@ -231,19 +310,6 @@
     50% {
       box-shadow: 0 0 24px var(--magenta-glow);
     }
-  }
-
-  .tile-label {
-    font-size: clamp(0.68rem, 2.6vh, 1rem);
-    font-weight: bold;
-    letter-spacing: 0.01em;
-    color: var(--gold-bright);
-  }
-
-  .tile-description {
-    font-size: clamp(0.55rem, 1.7vh, 0.72rem);
-    color: var(--cream-dim);
-    line-height: 1.2;
   }
 
   .status {

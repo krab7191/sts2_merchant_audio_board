@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { AUDIO_CATEGORIES, getCategory, clipUrl } from '../src/data/audioManifest';
+import { AUDIO_CATEGORIES, getCategory, categoriesByVariant, clipUrl } from '../src/data/audioManifest';
 
 describe('AUDIO_CATEGORIES', () => {
   it('has 8 categories', () => {
@@ -54,5 +54,25 @@ describe('getCategory', () => {
 describe('clipUrl', () => {
   it('builds a public/ relative path', () => {
     expect(clipUrl('welcome', 2)).toBe('/audio/welcome/2.mp3');
+  });
+});
+
+describe('categoriesByVariant', () => {
+  it('returns the 5 real-Merchant categories', () => {
+    const merchant = categoriesByVariant('merchant');
+    expect(merchant).toHaveLength(5);
+    expect(merchant.every((c) => c.variant === 'merchant')).toBe(true);
+  });
+
+  it('returns the 3 Fake-Merchant categories', () => {
+    const fake = categoriesByVariant('fake_merchant');
+    expect(fake).toHaveLength(3);
+    expect(fake.every((c) => c.variant === 'fake_merchant')).toBe(true);
+  });
+
+  it('partitions every category into exactly one of the two variants', () => {
+    const merchant = categoriesByVariant('merchant');
+    const fake = categoriesByVariant('fake_merchant');
+    expect(merchant.length + fake.length).toBe(AUDIO_CATEGORIES.length);
   });
 });
